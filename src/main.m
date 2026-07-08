@@ -4,8 +4,8 @@ clc
 %% Configuration
 
 ACQUISITION_DATES = {"22weeks"};
-MOUSE_NAMES = {"1R"};
-CAGE_NUMBER = 6;
+MOUSE_NAMES = {"1L"};
+CAGE_NUMBER = 5;
 
 SAMPLING_RATE = 120;
 FORCE_RATE = 960;
