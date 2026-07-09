@@ -23,9 +23,9 @@ Prepare inputs for inverse kinematics and inverse dynamics
 
 MATLAB R2022b or newer
 
-OpenSim
+OpenSim 4.4 or newer
 
-BTK Toolbox for MATLAB
+BTK Toolbox for MATLAB 0.3.0 or newer
 
 ## Installation
 
