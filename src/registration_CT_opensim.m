@@ -10,8 +10,7 @@ mouse_name = "Cage51L";
 unit_conversion = 0.1; % CT(mm) to OpenSim(cm)
 
 % Path to your template OpenSim model
-osim_input_file = "../IK/Model_right/Model_mouse_right.osim";
-osim_output_file = '../IK/Model_right/Model_mouse_right_markers.osim';
+osim_input_file = "../Model_mouse_right.osim";
 
 output_folder = strcat(mouse_name,'/Model_data/');
 output_file = fullfile(output_folder, ...
