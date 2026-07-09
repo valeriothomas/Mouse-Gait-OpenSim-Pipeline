@@ -57,7 +57,7 @@ MBD_simulations
 
 ## Outputs
 
-*.osim - updated opensim model with personalised marker coordinates 
+*.osim — updated opensim model with personalised marker coordinates 
 
 *.trc — normalized marker trajectories
 
@@ -65,9 +65,9 @@ MBD_simulations
 
 *.xml — OpenSim external loads
 
-*.mot - joint angles from inverse kinematic
+*.mot — joint angles from inverse kinematic
 
-*.sto muscle and joint forces
+*.sto — muscle and joint forces
 
 ## Citation
 
