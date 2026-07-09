@@ -5,8 +5,8 @@ import org.opensim.modeling.*
 %% Inverse kinematic
 % 1. Setup File Paths
 mouse_age = "22weeks";
-mouse_name = "Cage6none";
-trcName = 'cage6none22weeks11_StanceNorm_01.trc';
+mouse_name = "Cage51L";
+trcName = 'cage51L22weeks1_StanceNorm_01.trc';
 
 modelFile  = strcat(mouse_age,'/',mouse_name,'/Model_data/Model_mouse_right_markers.osim');
 trcFile    = strcat(mouse_age,'/',mouse_name,'/Model_data/',trcName);
