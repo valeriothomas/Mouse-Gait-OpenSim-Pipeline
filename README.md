@@ -49,7 +49,7 @@ Open MATLAB in the repository folder.
 
 registration_CT_opensim
 
-main
+c3d_to_trc
 
 inverse_kinematic
 
