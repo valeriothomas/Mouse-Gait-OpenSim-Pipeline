@@ -1,11 +1,11 @@
 # Mouse-Gait-OpenSim-Pipeline
-MATLAB pipeline for preprocessing mouse gait data and generating OpenSim-compatible OSIM, TRC, MOT, and XML files from Vicon C3D recordings, and running multi-body dynamic simulations.
+A MATLAB/OpenSim pipeline for processing mouse gait data from Vicon motion capture and estimating muscle and joint forces using multibody dynamics simulations.
 
 ## Features
 
-Register segmented mouse hindlimb bones and marker 3D model to a template opensim model
+Register segmented mouse hindlimb bones and experimental marker positions to a template OpenSim model
 
-Update model marker coordinates
+Update marker locations in the OpenSim model
 
 Import Vicon C3D files
 
@@ -25,7 +25,7 @@ Prepare inputs for inverse kinematics and inverse dynamics
 
 Run inverse kinematics
 
-Run multi-body dynamic simulations to estimate muscle and joint forces
+Run OpenSim multibody dynamics simulations to estimate muscle and joint forces
 
 ## Requirements
 
