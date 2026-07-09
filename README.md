@@ -23,7 +23,7 @@ Export OpenSim-compatible .mot and .xml files
 
 Prepare inputs for inverse kinematics and inverse dynamics
 
-Run the inverse kinematics
+Run inverse kinematics
 
 Run multi-body dynamic simulations to estimate muscle and joint forces
 
