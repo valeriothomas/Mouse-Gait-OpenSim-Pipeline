@@ -256,3 +256,11 @@ function arr = osimVecToArray(vec)
         arr(i+1) = vec.get(i);
     end
 end
+
+% Copy the outpus file
+muscleForcesFile = 'Output_files/SO_StaticOptimization_force.sto';
+jointForcesFile = 'Output_files/Joint_condition_ReactionLoads.sto';
+newMuscleForcesFile = strcat(mouse_age,'/',mouse_name,'/Model_data/muscle_forces.sto');
+newJointForcesFile = strcat(mouse_age,'/',mouse_name,'/Model_data/joint_forces.sto');
+copyfile(muscleForcesFile, newMuscleForcesFile);
+copyfile(jointForcesFile, newJointForcesFile);
