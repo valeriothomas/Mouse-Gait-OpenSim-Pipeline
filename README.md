@@ -1,7 +1,7 @@
 # Mouse-Gait-OpenSim-Pipeline
 A MATLAB/OpenSim pipeline for processing mouse gait data from Vicon motion capture and estimating muscle and joint forces using multibody dynamics simulations.
 
-<img width="1738" height="676" alt="image" src="https://github.com/user-attachments/assets/4d744673-427e-4a8c-a778-17543212f7c3" />
+<img width="1887" height="683" alt="image" src="https://github.com/user-attachments/assets/557e77a1-970b-4ab4-be65-3a535cf2ba55" />
 
 ## Features
 
