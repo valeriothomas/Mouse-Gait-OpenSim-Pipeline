@@ -111,6 +111,10 @@ Torque = [ ...
     grfTable.("x1_ground_torque_y"), ...
     grfTable.("x1_ground_torque_z")];
 
+% Remove some GRF components
+% GRF(:,1) = 0; % anteroposterior
+GRF(:,3) = 0; % mediolateral
+
 % Correct CoP position
 % COP(:,1) = COP(:,1)./10;
 % COP(:,2) = COP(:,2) - 0.018;
@@ -395,6 +399,11 @@ title(sprintf('Global RMSE through time (mean = %.2f mm)',...
 grid on
 
 %% Update GRF .mot file with new CoP
+
+% Replace Force columns
+grfTable.("x1_ground_force_vx") = GRF(:,1);
+grfTable.("x1_ground_force_vy") = GRF(:,2);
+grfTable.("x1_ground_force_vz") = GRF(:,3);
 
 % Replace CoP columns
 grfTable.("x1_ground_force_px") = CoP(:,1);
