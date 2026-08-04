@@ -11,8 +11,8 @@ function FyNorm = exportGRFCycle( ...
 
 ANALOG_RATIO = 8;
 
-a0 = f0*ANALOG_RATIO + 1;
-a1 = (f1+1)*ANALOG_RATIO;
+a0 = f0*ANALOG_RATIO ;
+a1 = f1*ANALOG_RATIO;
 
 FxCycle = Fx(a0:a1);
 FyCycle = Fy(a0:a1);
