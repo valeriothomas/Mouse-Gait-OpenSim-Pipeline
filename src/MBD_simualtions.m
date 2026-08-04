@@ -5,7 +5,7 @@ import org.opensim.modeling.*
 
 % Mouse number
 mouse_age = "22weeks";
-mouse_name = "Cage51L";
+mouse_name = "Cage51R";
 
 %% --- File names ---
 model_name = strcat(mouse_age,'/',mouse_name,'/Model_data/Model_mouse_right_markers.osim');
@@ -41,6 +41,17 @@ GRF_z = osimVecToArray(GRF_data.getDependentColumn('x1_ground_force_vz')); % Med
 %% --- Load and initialize model ---
 model = Model(model_name);
 
+% % % Modify the gravity
+% theta = 40; % degrees
+% g = 9.81;
+% 
+% gx = -g * sind(theta);
+% gy = -g * cosd(theta);
+% 
+% model.setGravity(Vec3(gx, gy, 0));
+% 
+% state = model.initSystem();
+
 % % Modify maximal isometric force 
 % muscles = model.getMuscles();
 % for i = 0:muscles.getSize()-1
@@ -54,6 +65,27 @@ model = Model(model_name);
 % model = Model(model_name);
 % 
 % 
+% state = model.initSystem();
+
+% % Modify maximal contraction velocity
+% muscles = model.getMuscles();
+% 
+% for i = 0:muscles.getSize()-1
+% 
+%     % Get muscle
+%     m = muscles.get(i);
+% 
+%     % Set maximum contraction velocity (20 optimal fiber lengths/s)
+%     m.setMaxContractionVelocity(20);
+% 
+% end
+% 
+% % Save the modified model
+% model.print("Model_mouse_right_markers_Vmax20.osim");
+% 
+% % Reload the modified model 
+% model_name = "Model_mouse_right_markers_Vmax20.osim";
+% model = Model(model_name);
 % state = model.initSystem();
 
 %% --- Inverse Dynamics Tool ---
@@ -78,7 +110,7 @@ id_tool.run();
 %% --- Static Optimization ---
 so = StaticOptimization();
 so.setActivationExponent(2);
-so.setUseMusclePhysiology(false);
+so.setUseMusclePhysiology(true);
 so.setStartTime(start_time);
 so.setEndTime(end_time);
 
@@ -171,6 +203,9 @@ moment_hip = osimVecToArray(table_moments.getDependentColumn('Hip_flexion_r_mome
 moment_knee = osimVecToArray(table_moments.getDependentColumn('Knee_extension_r_moment'));
 moment_ankle = osimVecToArray(table_moments.getDependentColumn('Ankle_flexion_r_moment'));
 
+% Filter for muscle and joint forces
+[b,a] = butter(4,cutoff/frequency,'low');
+
 % Extract reaction forces (example: Knee & Ankle)
 knee_force_x = osimVecToArray(table_joints.getDependentColumn('Knee_r_on_Leg_r_in_Leg_r_fx'));
 knee_force_y = osimVecToArray(table_joints.getDependentColumn('Knee_r_on_Leg_r_in_Leg_r_fy'));
@@ -188,12 +223,36 @@ actuator_names = {'Hip_flexion_r','Knee_extension_r','Ankle_flexion_r'};
 
 % Plots
 
+% Normalisation to 101 frames before plotting
+nKin = length(Hip_Flexion_Angle);
+nGRF = length(GRF_x);
+
+kinOld = linspace(0,100,nKin);
+grfOld = linspace(0,100,nGRF);
+cycleNew = linspace(0,100,101);
+
+GRF_x = interp1(grfOld, GRF_x, cycleNew, 'linear');
+GRF_y = interp1(grfOld, GRF_y, cycleNew, 'linear');
+GRF_z = interp1(grfOld, GRF_z, cycleNew, 'linear');
+
+Hip_Flexion_Angle  = interp1(kinOld, Hip_Flexion_Angle, cycleNew, 'linear');
+Knee_Flexion_Angle = interp1(kinOld, Knee_Flexion_Angle, cycleNew, 'linear');
+Ankle_Flexion_Angle = interp1(kinOld, Ankle_Flexion_Angle, cycleNew, 'linear');
+
+knee_force_x = interp1(kinOld, knee_force_x, cycleNew, 'linear');
+knee_force_y = interp1(kinOld, knee_force_y, cycleNew, 'linear');
+knee_force_z = interp1(kinOld, knee_force_z, cycleNew, 'linear');
+ankle_force_x = interp1(kinOld, ankle_force_x, cycleNew, 'linear');
+ankle_force_y = interp1(kinOld, ankle_force_y, cycleNew, 'linear');
+ankle_force_z = interp1(kinOld, ankle_force_z, cycleNew, 'linear');
+
+
 % Muscles
 figure
 hold on
 for i = 1:length(muscle_names)
-    eval([muscle_names{i} ' = osimVecToArray(table_muscles.getDependentColumn(muscle_names{i}));']);
-    plot(osimVecToArray(table_muscles.getDependentColumn(muscle_names{i})))
+    eval([muscle_names{i} ' = interp1(kinOld, osimVecToArray(table_muscles.getDependentColumn(muscle_names{i})), cycleNew, ''linear'');']);
+    plot(interp1(kinOld, osimVecToArray(table_muscles.getDependentColumn(muscle_names{i})),cycleNew, 'linear'));
 end
 legend(muscle_names)
 xlabel('Stance phase (%)')
@@ -218,8 +277,8 @@ title('Tibia joint forces')
 figure
 hold on
 for i = 1:length(actuator_names)
-    eval([actuator_names{i} ' = osimVecToArray(table_muscles.getDependentColumn(actuator_names{i}));']);
-    plot(1000*osimVecToArray(table_muscles.getDependentColumn(actuator_names{i})))
+    eval([actuator_names{i} ' = interp1(kinOld, osimVecToArray(table_muscles.getDependentColumn(actuator_names{i})), cycleNew, ''linear'');']);
+    plot(interp1(kinOld, 1000*osimVecToArray(table_muscles.getDependentColumn(actuator_names{i})),cycleNew, 'linear'));
 end
 legend(actuator_names)
 xlabel('Stance phase (%)')
