@@ -1,7 +1,11 @@
 function signalNorm = normalizeCycle(signal,fs,nPoints)
 
+% if nargin<3
+%     nPoints = 101;
+% end % to normalize the stance phase
+
 if nargin<3
-    nPoints = 101;
+    nPoints = length(signal); % to keep the original number
 end
 
 oldX = linspace(0,...
