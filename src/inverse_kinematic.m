@@ -5,8 +5,8 @@ import org.opensim.modeling.*
 %% Inverse kinematic
 % 1. Setup File Paths
 mouse_age = "22weeks";
-mouse_name = "Cage51L";
-trcName = 'cage51L22weeks1_StanceNorm_01.trc';
+mouse_name = "Cage51R";
+trcName = 'cage51R22weeks4_StanceNorm_01.trc';
 
 modelFile  = strcat(mouse_age,'/',mouse_name,'/Model_data/Model_mouse_right_markers.osim');
 trcFile    = strcat(mouse_age,'/',mouse_name,'/Model_data/',trcName);
@@ -145,13 +145,20 @@ nFrames = trcData.getNumFrames();
 expMarkerNames = {'Right_Illiac', 'Right_Hip', 'Right_Knee', 'Right_Ankle', 'Right_Met',...
                   'Left_Illiac'}; % Must match TRC column names
 
+% Susbample GRF data
+nKin = nFrames;
+nGRF = size(GRF,1);
+
+xOld = linspace(0,1,nGRF);
+xNew = linspace(0,1,nKin);
+
+GRF_sub = interp1(xOld, GRF, xNew, 'linear');
+COP = interp1(xOld, COP, xNew, 'linear');
+
 % --- 2. Setup Visualization ---
 bodies = {'Pelvis', 'Thigh_r', 'Leg_r', 'Foot_r', 'Toes_r'}; 
-stls   = {strcat(mouse_age,'/',mouse_name,'/Model_data/','Geometry/Pelvis_r.stl'),...
-          strcat(mouse_age,'/',mouse_name,'/Model_data/','Geometry/femur_r.stl'),...
-          strcat(mouse_age,'/',mouse_name,'/Model_data/','Geometry/tibfib_r.stl'),...
-          strcat(mouse_age,'/',mouse_name,'/Model_data/','Geometry/foot_r.stl'),...
-          strcat(mouse_age,'/',mouse_name,'/Model_data/','Geometry/phalanges_r.stl')};
+stls   = {'Geometry/Pelvis_r.stl', 'Geometry/femur_r.stl', ...
+          'Geometry/tibfib_r.stl', 'Geometry/foot_r.stl', 'Geometry/phalanges_r.stl'};
 
 figure('Color', 'w'); hold on; axis equal; view(2); light; grid off;
 
@@ -259,11 +266,11 @@ for f = 0:nFrames-1
 
     %% G. Update GRF
 
-    if f+1 <= size(GRF,1)
+    if f+1 <= size(GRF_sub,1)
     
         cop = CoP(f+1,:);
     
-        force = GRF(f+1,:);
+        force = GRF_sub(f+1,:);
     
         set(grfHandle,...
             'XData',cop(1),...
@@ -283,7 +290,7 @@ for f = 0:nFrames-1
         writeVideo(v, frame);
     end
     
-    pause(0.001);
+    pause(0.1);
 end
 
 % --- NEW: Finalize Video ---
@@ -399,6 +406,9 @@ title(sprintf('Global RMSE through time (mean = %.2f mm)',...
 grid on
 
 %% Update GRF .mot file with new CoP
+
+% Interpolate COP data
+CoP = interp1(xNew, CoP, xOld, 'linear');
 
 % Replace Force columns
 grfTable.("x1_ground_force_vx") = GRF(:,1);
